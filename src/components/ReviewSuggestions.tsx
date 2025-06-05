@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useCallback, useEffect } from 'react';
@@ -134,8 +135,8 @@ export default function ReviewSuggestions({ onStartQuizWithSuggestions }: Review
             </Button>
           </div>
         )}
-         {!isLoading && suggestedWords.length === 0 && !isLoading && (
-          <p className="text-muted-foreground text-center pt-4">Click the button above to get suggestions.</p>
+         {!isLoading && suggestedWords.length === 0 && (
+          <p className="text-muted-foreground text-center pt-4">Click the button above to get suggestions, or AI found nothing to review yet!</p>
         )}
       </CardContent>
     </Card>

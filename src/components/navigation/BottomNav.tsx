@@ -1,8 +1,9 @@
+
 "use client";
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, BookOpen, PencilLine, BarChart3, Sparkles, GraduationCap } from 'lucide-react';
+import { Home, BookOpen, PencilLine, BarChart3, Sparkles } from 'lucide-react'; // Replaced GraduationCap with Sparkles
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -10,7 +11,7 @@ const navItems = [
   { href: '/learn', label: 'Learn', icon: BookOpen },
   { href: '/quiz', label: 'Quiz', icon: PencilLine },
   { href: '/progress', label: 'Progress', icon: BarChart3 },
-  { href: '/review', label: 'Review', icon: Sparkles },
+  { href: '/review', label: 'Review', icon: Sparkles }, // New review item
 ];
 
 export default function BottomNav() {

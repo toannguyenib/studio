@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -132,7 +133,7 @@ function ActionCard({ href, icon: Icon, title, description, buttonText }: Action
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-muted-foreground">{description}</p>
-        <Link href={href} passHref>
+        <Link href="/href" passHref>
           <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90">{buttonText}</Button>
         </Link>
       </CardContent>
