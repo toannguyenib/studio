@@ -10,8 +10,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Inter', 'sans-serif'],
-        headline: ['Inter', 'sans-serif'],
+        body: ['Alegreya', 'serif'],
+        headline: ['Alegreya', 'serif'],
         code: ['monospace'],
       },
       colors: {
@@ -88,10 +88,20 @@ export default {
             height: '0',
           },
         },
+        'pulse-correct': {
+          '0%, 100%': { backgroundColor: 'hsl(var(--accent))' },
+          '50%': { backgroundColor: 'hsl(120, 60%, 70%)' }, /* Light green */
+        },
+        'pulse-incorrect': {
+          '0%, 100%': { backgroundColor: 'hsl(var(--accent))' },
+          '50%': { backgroundColor: 'hsl(0, 70%, 70%)' }, /* Light red */
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'pulse-correct': 'pulse-correct 0.8s ease-in-out',
+        'pulse-incorrect': 'pulse-incorrect 0.8s ease-in-out',
       },
     },
   },
