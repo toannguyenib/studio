@@ -4,6 +4,10 @@ export interface Word {
   definition: string;
   level: number; // e.g., 1, 2, 3
   exampleSentence?: string;
+  roots?: string[]; // Array of strings
+  synonyms?: string[]; // Array of strings
+  antonyms?: string[]; // Array of strings
+  confusedWith?: string[]; // Array of strings
 }
 
 export interface WordPerformance {
