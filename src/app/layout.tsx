@@ -5,8 +5,8 @@ import { AppShell } from '@/components/layout/AppShell';
 import { UserProgressProvider } from '@/contexts/UserProgressContext';
 
 export const metadata: Metadata = {
-  title: 'Vocab Victor',
-  description: 'Master SAT vocabulary with Vocab Victor!',
+  title: 'SAT Vocab Master',
+  description: 'Master SAT vocabulary with TiengAnhIvy Vocab Master!',
 };
 
 export default function RootLayout({
