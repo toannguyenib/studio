@@ -5,14 +5,6 @@ import { useUserProgress } from '@/contexts/UserProgressContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Star, ShieldCheck, BrainCircuit, Atom } from 'lucide-react'; // Example icons
 
-const leagues: League[] = [
-  { name: 'Word Novice', minPoints: 0, icon: ShieldCheck },
-  { name: 'Lexicon Explorer', minPoints: 100, icon: Star },
-  { name: 'Vocabulary Voyager', minPoints: 500, icon: BrainCircuit },
-  { name: 'SAT Scholar', minPoints: 1000, icon: GraduationCap }, // GraduationCap used from lucide-react
-  { name: 'Linguistic Master', minPoints: 2000, icon: Atom },
-];
-
 // Helper to get GraduationCap icon. It's not directly in Lucide so we create a placeholder
 const GraduationCap = (props: React.SVGProps<SVGSVGElement>) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -20,6 +12,15 @@ const GraduationCap = (props: React.SVGProps<SVGSVGElement>) => (
     <path d="M6 12v5c0 1.1.9 2 2 2h8a2 2 0 002-2v-5"/>
   </svg>
 );
+
+
+const leagues: League[] = [
+  { name: 'Word Novice', minPoints: 0, icon: ShieldCheck },
+  { name: 'Lexicon Explorer', minPoints: 100, icon: Star },
+  { name: 'Vocabulary Voyager', minPoints: 500, icon: BrainCircuit },
+  { name: 'SAT Scholar', minPoints: 1000, icon: GraduationCap }, // GraduationCap used from lucide-react
+  { name: 'Linguistic Master', minPoints: 2000, icon: Atom },
+];
 
 
 const getCurrentLeague = (points: number): League => {
