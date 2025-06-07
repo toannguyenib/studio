@@ -1,9 +1,10 @@
-
 "use client";
 
 import type { UserData, WordPerformance } from '@/types';
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { MAX_LEVEL } from '@/lib/vocabulary';
+import { MAX_LEVEL } from '@/lib/vocabulary'; // Already correctly imported
+// --- FIX: Change require to import at the top level ---
+import { vocabulary, getWordById } from '@/lib/vocabulary'; // Import vocabulary and getWordById here
 
 const initialUserData: UserData = {
   points: 0,
@@ -85,7 +86,7 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({ 
     setUserData(prev => {
       const today = new Date().toISOString().split('T')[0];
       let newCurrentDailyStreak = prev.currentDailyStreak;
-      
+
       if (prev.lastQuizCompletionDate) {
         const lastDate = new Date(prev.lastQuizCompletionDate);
         const currentDate = new Date(today);
@@ -101,12 +102,11 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({ 
       } else {
         newCurrentDailyStreak = 1; // First quiz
       }
-      
+
       // Ensure streak is at least 1 if a quiz was completed today
       if (prev.lastQuizCompletionDate !== today) {
          newCurrentDailyStreak = Math.max(1, newCurrentDailyStreak);
       }
-
 
       const newLongestDailyStreak = Math.max(prev.longestDailyStreak, newCurrentDailyStreak);
 
@@ -119,19 +119,14 @@ export const UserProgressProvider: React.FC<{ children: React.ReactNode }> = ({ 
       };
     });
   }, []);
-  
-  const getPerformanceForWords = useCallback((wordIds: string[]): Array<{ wordId: string; word: string; correctAnswers: number; incorrectAnswers: number }> => {
-    // This function needs access to the vocabulary list to get the word text.
-    // For simplicity, this is a placeholder. In a real app, you'd import `vocabulary` here.
-    // This part of the hook would ideally be in a place where it can access vocabulary.ts data or be passed it.
-    // For now, we'll assume word text is not needed by the AI or is handled upstream.
-    // The AI flow `suggestWordsForReview` expects `word` text.
-    // This requires a way to look up word text by ID.
-    const { vocabulary, getWordById } = require('@/lib/vocabulary'); // Lazy require to avoid circular dependency issues on server
 
+  const getPerformanceForWords = useCallback((wordIds: string[]): Array<{ wordId: string; word: string; correctAnswers: number; incorrectAnswers: number }> => {
+    // Now vocabulary and getWordById are imported at the top level,
+    // which is the standard and preferred way in Next.js/React components.
+    // The "use client" directive ensures this code runs on the client.
     return wordIds.map(id => {
       const stat = userData.wordStats[id] || { correctAnswers: 0, incorrectAnswers: 0 };
-      const wordEntry = getWordById(id);
+      const wordEntry = getWordById(id); // Use the imported function directly
       return {
         wordId: id,
         word: wordEntry ? wordEntry.text : 'Unknown Word', // Provide actual word text
