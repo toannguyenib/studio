@@ -4587,7 +4587,7 @@ exampleSentence: 'A zealous advocate for human rights.',
     level: 2
   },
   {
-    id:  '0',
+    id:  '421',
     text: "vehement (adj) vehere to carry",
     definition: "showing intense feeling; vehemence = intense feeling",
     exampleSentence: "The lawyer\u2019s accusation was met with a vehement denial.",

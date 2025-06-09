@@ -66,7 +66,7 @@ export default function WordDisplayCard({ word }: WordDisplayCardProps) {
       <CardContent className="space-y-3">
         <p className="text-lg">{word.definition}</p>
         {word.exampleSentence && (
-          <p className="italic text-muted-foreground">
+          <p className="italic text-lg text-muted-foreground">
             Example: "{word.exampleSentence}"
           </p>
         )}
@@ -92,28 +92,28 @@ export default function WordDisplayCard({ word }: WordDisplayCardProps) {
           <div className="mt-4 pt-4 border-t space-y-3">
             {word.roots && word.roots.length > 0 && (
               <div>
-                <h4 className="text-md font-semibold text-primary">Roots:</h4>
-                <ul className="list-disc list-inside text-sm text-muted-foreground ml-4">
+                <h4 className="text-xl font-semibold text-primary">Roots:</h4>
+                <ul className="list-disc list-inside text-lg text-muted-foreground ml-4">
                   {word.roots.map((root, index) => <li key={`root-${index}`}>{root}</li>)}
                 </ul>
               </div>
             )}
             {word.synonyms && word.synonyms.length > 0 && (
               <div>
-                <h4 className="text-md font-semibold text-primary">Synonyms:</h4>
-                <p className="text-sm text-muted-foreground">{word.synonyms.join(', ')}</p>
+                <h4 className="text-xl font-semibold text-primary">Synonyms:</h4>
+                <p className="text-lg text-muted-foreground">{word.synonyms.join(', ')}</p>
               </div>
             )}
             {word.antonyms && word.antonyms.length > 0 && (
               <div>
-                <h4 className="text-md font-semibold text-primary">Antonyms:</h4>
-                <p className="text-sm text-muted-foreground">{word.antonyms.join(', ')}</p>
+                <h4 className="text-xl font-semibold text-primary">Antonyms:</h4>
+                <p className="text-lg text-muted-foreground">{word.antonyms.join(', ')}</p>
               </div>
             )}
             {word.confusedWith && word.confusedWith.length > 0 && (
               <div>
-                <h4 className="text-md font-semibold text-primary">Commonly Confused With:</h4>
-                 <ul className="list-disc list-inside text-sm text-muted-foreground ml-4">
+                <h4 className="text-xl font-semibold text-primary">Commonly Confused With:</h4>
+                 <ul className="list-disc list-inside text-lg text-muted-foreground ml-4">
                   {word.confusedWith.map((item, index) => <li key={`confused-${index}`}>{item}</li>)}
                 </ul>
               </div>

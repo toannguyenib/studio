@@ -32,7 +32,7 @@ export default function HomePage() {
     <div className="space-y-8 animate-fadeIn">
       <Card className="shadow-lg">
         <CardHeader>
-          <CardTitle className="font-headline text-3xl text-primary">Welcome to Vocab Victor!</CardTitle>
+          <CardTitle className="font-headline text-3xl text-primary">Welcome to Ivy Vocab Master!</CardTitle>
           <CardDescription className="text-lg">Ready to conquer SAT vocabulary?</CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
