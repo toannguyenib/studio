@@ -1,9 +1,10 @@
+
 "use client";
 
 import React, { useState, useMemo, useEffect } from 'react';
 import QuizView from '@/components/QuizView';
-import { vocabulary, getWordsByLevel, MAX_LEVEL } from '@/lib/vocabulary';
-import type { Word } from '@/types';
+import { vocabulary, topics, getWordsByTopic, getAllWords } from '@/lib/vocabulary';
+import type { Word, Topic } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -12,68 +13,71 @@ import { useToast } from '@/hooks/use-toast';
 import { RefreshCw } from 'lucide-react';
 
 export default function QuizPage() {
-  const { userData, isLoading: userDataLoading, unlockNextLevel } = useUserProgress();
+  const { userData, isLoading: userDataLoading } = useUserProgress(); // Removed unlockNextLevel
   const { toast } = useToast();
-  const [selectedLevel, setSelectedLevel] = useState<number | 'all'>(userData.unlockedLevels[0] || 1);
+  const [selectedTopicId, setSelectedTopicId] = useState<string | 'all'>(topics[0]?.id || 'all');
   const [quizWords, setQuizWords] = useState<Word[]>([]);
-  const [quizKey, setQuizKey] = useState(0); // Used to force re-render of QuizView
+  const [quizKey, setQuizKey] = useState(0); 
 
   const wordsForQuiz = useMemo(() => {
-    if (selectedLevel === 'all') {
-      // Quiz on all words from unlocked levels
-      return vocabulary.filter(word => userData.unlockedLevels.includes(word.level));
+    if (selectedTopicId === 'all') {
+      return getAllWords();
     }
-    return getWordsByLevel(selectedLevel as number);
-  }, [selectedLevel, userData.unlockedLevels]);
+    const selectedTopic = topics.find(t => t.id === selectedTopicId);
+    return selectedTopic ? getWordsByTopic(selectedTopic.name) : [];
+  }, [selectedTopicId]);
 
   useEffect(() => {
-    // Set initial quiz words when component mounts or user data loads
     if (!userDataLoading) {
-        if (selectedLevel === 'all') {
-            setQuizWords(vocabulary.filter(word => userData.unlockedLevels.includes(word.level)));
-        } else if (userData.unlockedLevels.includes(selectedLevel as number)) {
-            setQuizWords(getWordsByLevel(selectedLevel as number));
+        if (selectedTopicId === 'all') {
+            setQuizWords(getAllWords());
         } else {
-            // Fallback to the first unlocked level if current selection is invalid
-            const firstUnlocked = userData.unlockedLevels[0] || 1;
-            setSelectedLevel(firstUnlocked);
-            setQuizWords(getWordsByLevel(firstUnlocked));
+            const selectedTopic = topics.find(t => t.id === selectedTopicId);
+            if (selectedTopic) {
+                setQuizWords(getWordsByTopic(selectedTopic.name));
+            } else {
+                // Fallback if selectedTopicId is somehow invalid
+                setSelectedTopicId(topics[0]?.id || 'all');
+                setQuizWords(selectedTopicId === 'all' ? getAllWords() : getWordsByTopic(topics[0]?.name || ''));
+            }
         }
-        setQuizKey(prev => prev + 1); // Trigger quiz generation
+        setQuizKey(prev => prev + 1);
     }
-  }, [userDataLoading, selectedLevel, userData.unlockedLevels]);
+  }, [userDataLoading, selectedTopicId]);
 
 
-  const handleLevelChange = (levelValue: string) => {
-    const level = levelValue === 'all' ? 'all' : parseInt(levelValue, 10);
-    if (level === 'all' || userData.unlockedLevels.includes(level)) {
-      setSelectedLevel(level);
-      if (level === 'all') {
-        setQuizWords(vocabulary.filter(word => userData.unlockedLevels.includes(word.level)));
+  const handleTopicChange = (topicValue: string) => {
+    setSelectedTopicId(topicValue); // topicValue is topic.id or 'all'
+    if (topicValue === 'all') {
+      setQuizWords(getAllWords());
+    } else {
+      const topic = topics.find(t => t.id === topicValue);
+      if (topic) {
+        setQuizWords(getWordsByTopic(topic.name));
       } else {
-        setQuizWords(getWordsByLevel(level));
+        setQuizWords([]); // Should not happen if UI is correct
       }
-      setQuizKey(prev => prev + 1); // Force QuizView to re-initialize with new words
     }
+    setQuizKey(prev => prev + 1); 
   };
 
   const handleQuizComplete = (score: number, totalQuestions: number) => {
-    // Try to unlock next level if user scored well (e.g., >70%)
-    if (totalQuestions > 0 && (score / totalQuestions) >= 0.7) {
-      const newLevelWasUnlocked = unlockNextLevel();
-      if (newLevelWasUnlocked) {
-        toast({
-          title: "Level Up!",
-          description: `Congratulations! You've unlocked a new level.`,
-          variant: "default",
-        });
-      }
-    }
+    // No level unlocking logic needed anymore
+    toast({
+        title: "Quiz Complete!",
+        description: `You scored ${score} out of ${totalQuestions}. ${score * 10} points earned!`,
+        variant: "default",
+    });
   };
   
   if (userDataLoading) {
     return <div className="text-center py-10"><p>Loading user data...</p></div>;
   }
+  
+  if (topics.length === 0 && getAllWords().length === 0) {
+      return <div className="text-center py-10"><p>No topics or words available for quizzes yet. Please add some vocabulary first.</p></div>;
+  }
+
 
   return (
     <div className="container mx-auto py-8 animate-fadeIn">
@@ -82,22 +86,21 @@ export default function QuizPage() {
       <Card className="mb-8 shadow-lg">
         <CardHeader>
           <CardTitle>Quiz Settings</CardTitle>
-          <CardDescription>Choose a level to start your quiz.</CardDescription>
+          <CardDescription>Choose a topic to start your quiz.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-          <Select onValueChange={handleLevelChange} defaultValue={String(selectedLevel)}>
-            <SelectTrigger className="w-full sm:w-[200px]">
-              <SelectValue placeholder="Select Level" />
+          <Select onValueChange={handleTopicChange} defaultValue={String(selectedTopicId)}>
+            <SelectTrigger className="w-full sm:w-[280px]">
+              <SelectValue placeholder="Select Topic" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Unlocked Levels</SelectItem>
-              {Array.from({ length: MAX_LEVEL }, (_, i) => i + 1).map(level => (
+              <SelectItem value="all">All Topics</SelectItem>
+              {topics.map(topic => (
                 <SelectItem 
-                  key={level} 
-                  value={String(level)}
-                  disabled={!userData.unlockedLevels.includes(level)}
+                  key={topic.id} 
+                  value={topic.id}
                 >
-                  Level {level} {userData.unlockedLevels.includes(level) ? "" : "(Locked)"}
+                  {topic.name}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -108,22 +111,16 @@ export default function QuizPage() {
         </CardContent>
       </Card>
       
-      {selectedLevel !== 'all' && !userData.unlockedLevels.includes(selectedLevel as number) && (
-         <p className="text-red-500 text-center mb-4">This level is locked. Complete quizzes on unlocked levels to unlock more.</p>
-      )}
-
       {quizWords.length > 0 ? (
         <QuizView 
           key={quizKey} 
           wordsForQuiz={quizWords} 
-          quizTitle={`Level ${selectedLevel === 'all' ? 'Mix' : selectedLevel} Quiz`}
+          quizTitle={`${selectedTopicId === 'all' ? 'All Topics' : topics.find(t=>t.id === selectedTopicId)?.name || 'Selected Topic'} Quiz`}
           onQuizComplete={handleQuizComplete}
         />
       ) : (
         <p className="text-center text-muted-foreground">
-          { (selectedLevel !== 'all' && !userData.unlockedLevels.includes(selectedLevel as number)) 
-            ? "Please select an unlocked level to start a quiz." 
-            : "No words available for this level to start a quiz. Try learning some first!"}
+          Please select a topic with available words to start a quiz, or add words to the selected topic.
         </p>
       )}
     </div>

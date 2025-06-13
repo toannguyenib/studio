@@ -9,7 +9,7 @@ import { useUserProgress } from '@/contexts/UserProgressContext';
 import { suggestWordsForReview, type SuggestWordsForReviewInput } from '@/ai/flows/suggest-words-for-review';
 import { useToast } from '@/hooks/use-toast';
 import type { Word } from '@/types';
-import { getWordById, vocabulary } from '@/lib/vocabulary'; // Assuming vocabulary is the full list of Word objects
+import { vocabulary } from '@/lib/vocabulary'; // Assuming vocabulary is the full list of Word objects
 
 interface ReviewSuggestionsProps {
   onStartQuizWithSuggestions: (suggestedWordsList: Word[]) => void;
@@ -38,8 +38,6 @@ export default function ReviewSuggestions({ onStartQuizWithSuggestions }: Review
     
     const performanceData = getPerformanceForWords(allWordIds);
     
-    // Filter out words with 0 incorrect answers if too many words, or based on some logic
-    // For now, send all words with stats if they have been interacted with
     const relevantPerformanceData = performanceData.filter(p => p.correctAnswers > 0 || p.incorrectAnswers > 0);
 
     if (relevantPerformanceData.length === 0) {
@@ -54,11 +52,11 @@ export default function ReviewSuggestions({ onStartQuizWithSuggestions }: Review
     
     const input: SuggestWordsForReviewInput = {
       pastPerformance: relevantPerformanceData.map(p => ({
-        word: p.word, // The AI flow expects the word string itself
+        word: p.word, 
         correctAnswers: p.correctAnswers,
         incorrectAnswers: p.incorrectAnswers,
       })),
-      numberOfWordsToSuggest: 5, // Suggest 5 words
+      numberOfWordsToSuggest: 5, 
     };
 
     try {
@@ -91,7 +89,7 @@ export default function ReviewSuggestions({ onStartQuizWithSuggestions }: Review
     if (suggestedWords.length > 0) {
       const wordsToQuiz: Word[] = suggestedWords
         .map(wordText => vocabulary.find(vWord => vWord.text === wordText))
-        .filter((word): word is Word => !!word); // Type guard to filter out undefined
+        .filter((word): word is Word => !!word); 
       
       if (wordsToQuiz.length > 0) {
         onStartQuizWithSuggestions(wordsToQuiz);
@@ -101,6 +99,14 @@ export default function ReviewSuggestions({ onStartQuizWithSuggestions }: Review
     }
   };
 
+  // Automatically fetch suggestions when the component mounts and user data is available
+  useEffect(() => {
+    if (Object.keys(userData.wordStats).length > 0) { // Only fetch if there's some data
+      // fetchReviewSuggestions(); // Optionally auto-fetch. User might prefer clicking.
+    }
+  }, [userData.wordStats, fetchReviewSuggestions]);
+
+
   return (
     <Card className="shadow-lg">
       <CardHeader>
@@ -109,7 +115,7 @@ export default function ReviewSuggestions({ onStartQuizWithSuggestions }: Review
           AI Word Review
         </CardTitle>
         <CardDescription>
-          Let AI analyze your performance and suggest words you should focus on.
+          Let AI analyze your performance and suggest IELTS words you should focus on.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -136,7 +142,7 @@ export default function ReviewSuggestions({ onStartQuizWithSuggestions }: Review
           </div>
         )}
          {!isLoading && suggestedWords.length === 0 && (
-          <p className="text-muted-foreground text-center pt-4">Click the button above to get suggestions, or AI found nothing to review yet!</p>
+          <p className="text-muted-foreground text-center pt-4">Click the button above to get suggestions, or if AI found nothing specific to review yet based on your quiz history!</p>
         )}
       </CardContent>
     </Card>

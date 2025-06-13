@@ -6,11 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Flame, Star, Zap, BookOpenText, Brain } from 'lucide-react';
 import { useUserProgress } from '@/contexts/UserProgressContext';
-import { vocabulary, MAX_LEVEL } from '@/lib/vocabulary';
+import { vocabulary, topics } from '@/lib/vocabulary'; // Import topics
 import type React from 'react';
 
-// Define the GraduationCap SVG icon component
-const GraduationCap = (props: React.SVGProps<SVGSVGElement>) => (
+// Define the GraduationCap SVG icon component (or replace with another relevant icon)
+const AcademicCap = (props: React.SVGProps<SVGSVGElement>) => ( // Renamed to avoid conflict if needed
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
     <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
     <path d="M6 12v5c0 1.1.9 2 2 2h8a2 2 0 002-2v-5"/>
@@ -27,18 +27,21 @@ export default function HomePage() {
   const wordsKnownCount = Object.values(userData.wordStats).filter(stat => stat.correctAnswers > 0).length;
   const totalWords = vocabulary.length;
   const progressPercentage = totalWords > 0 ? Math.round((wordsKnownCount / totalWords) * 100) : 0;
+  const totalTopics = topics.length;
 
   return (
     <div className="space-y-8 animate-fadeIn">
       <Card className="shadow-lg">
         <CardHeader>
-          <CardTitle className="font-headline text-3xl text-primary">Welcome to Vocab Victor!</CardTitle>
-          <CardDescription className="text-lg">Ready to conquer SAT vocabulary?</CardDescription>
+          <CardTitle className="font-headline text-3xl text-primary">Welcome to Tieng Anh Ivy!</CardTitle>
+          <CardDescription className="text-lg">Ready to master IELTS vocabulary?</CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <StatCard icon={Flame} title="Current Streak" value={`${userData.currentDailyStreak} days`} color="text-orange-500" />
           <StatCard icon={Star} title="Total Points" value={`${userData.points} pts`} color="text-yellow-500" />
-          <StatCard icon={GraduationCap} title="Unlocked Levels" value={`${userData.unlockedLevels.length} / ${MAX_LEVEL}`} color="text-green-500" />
+          {/* <StatCard icon={AcademicCap} title="Unlocked Levels" value={`${userData.unlockedLevels.length} / ${MAX_LEVEL}`} color="text-green-500" /> */}
+          {/* Replaced "Unlocked Levels" with "Total Topics" or similar if needed, or remove */}
+           <StatCard icon={BookOpenText} title="Vocabulary Topics" value={`${totalTopics} available`} color="text-green-500" />
         </CardContent>
       </Card>
 
@@ -46,8 +49,8 @@ export default function HomePage() {
         <ActionCard
           href="/learn"
           icon={BookOpenText}
-          title="Learn Words"
-          description="Explore new vocabulary by difficulty levels."
+          title="Learn Words by Topic"
+          description="Explore new vocabulary organized by IELTS topics."
           buttonText="Start Learning"
         />
         <ActionCard
@@ -73,7 +76,6 @@ export default function HomePage() {
             </Link>
         </CardContent>
       </Card>
-
 
       <Card className="shadow-lg">
         <CardHeader>
@@ -133,7 +135,7 @@ function ActionCard({ href, icon: Icon, title, description, buttonText }: Action
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-muted-foreground">{description}</p>
-        <Link href="/href" passHref>
+        <Link href={href} passHref> {/* Corrected Link href */}
           <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90">{buttonText}</Button>
         </Link>
       </CardContent>

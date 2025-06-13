@@ -2,12 +2,14 @@ export interface Word {
   id: string;
   text: string;
   definition: string;
-  level: number; // e.g., 1, 2, 3
+  topic: string; // Changed from level to topic
   exampleSentence?: string;
   roots?: string[]; // Array of strings
   synonyms?: string[]; // Array of strings
   antonyms?: string[]; // Array of strings
   confusedWith?: string[]; // Array of strings
+  pronunciation?: string; // Optional: for IELTS phonetic transcription
+  partOfSpeech?: string; // Optional: e.g., "noun", "verb"
 }
 
 export interface WordPerformance {
@@ -22,7 +24,7 @@ export interface UserData {
   longestDailyStreak: number;
   lastQuizCompletionDate: string | null; // YYYY-MM-DD format
   wordStats: Record<string, WordPerformance>; // Keyed by Word ID
-  unlockedLevels: number[];
+  // unlockedLevels: number[]; // Removed
   name?: string; // Optional user name
 }
 
@@ -41,3 +43,10 @@ export type League = {
   minPoints: number;
   icon?: React.ElementType;
 };
+
+export interface Topic {
+  id: string;
+  name: string;
+  description?: string;
+  // icon?: React.ElementType; // Optional: if you want icons for topics
+}
